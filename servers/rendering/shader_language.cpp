@@ -11439,8 +11439,21 @@ String ShaderLanguage::get_shader_type(const String &p_code) {
 	for (int i = _get_first_ident_pos(p_code); i < p_code.length(); i++) {
 		if (p_code[i] == ';') {
 			break;
-
-		} else if (p_code[i] <= 32) {
+		}
+		else if (p_code[i] == '#') {
+			int code_len = p_code.length();
+			while (i < code_len-1) {
+				if (p_code[i + 1] == '\n') {
+					if (p_code[i] == '\\') {
+						i++;
+						continue;
+					}
+					break;
+				}
+				i++;
+			}
+		}
+		else if (p_code[i] <= 32) {
 			if (!cur_identifier.is_empty()) {
 				if (!reading_type) {
 					if (cur_identifier != "shader_type") {
